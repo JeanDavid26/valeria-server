@@ -1,16 +1,14 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { NotImplementedException } from '@nestjs/common';
 import { AuthenticationController } from './authentication.controller';
+import { createMock } from '@golevelup/ts-jest';
+import { AuthenticationService } from '../services/authentication.service';
+import { RegisterDto } from './dtos/register.dto';
 
+const authenticationService = createMock<AuthenticationService>();
 describe('ControllerController', () => {
   let controller: AuthenticationController;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [AuthenticationController],
-    }).compile();
-
-    controller = module.get<AuthenticationController>(AuthenticationController);
+  beforeEach(() => {
+    controller = new AuthenticationController(authenticationService);
   });
 
   it('should be defined', () => {
@@ -18,26 +16,53 @@ describe('ControllerController', () => {
   });
 
   describe('signIn', () => {
-    it('should throw NotImplementedException', () => {
-      expect(() => controller.signIn()).toThrow(NotImplementedException);
-    });
-  });
+    it('should call the service with the right params', async () => {
+      const signInDto = {
+        email: 'test@test.com',
+        password: 'password',
+      };
 
-  describe('signOut', () => {
-    it('should throw NotImplementedException', () => {
-      expect(() => controller.signOut()).toThrow(NotImplementedException);
+      authenticationService.signIn.mockResolvedValueOnce({
+        accessToken: '',
+        refreshToken: '',
+      });
+
+      await controller.signIn(signInDto);
+
+      expect(authenticationService.signIn).toHaveBeenCalledWith(signInDto);
     });
   });
 
   describe('register', () => {
-    it('should throw NotImplementedException', () => {
-      expect(() => controller.register()).toThrow(NotImplementedException);
+    it('should call the service with the right params', async () => {
+      const registerDto: RegisterDto = {
+        email: 'test@test.com',
+        password: 'password',
+        username: 'username',
+      };
+
+      authenticationService.register.mockResolvedValueOnce({
+        accessToken: '',
+        refreshToken: '',
+      });
+
+      await controller.register(registerDto);
+
+      expect(authenticationService.register).toHaveBeenCalledWith(registerDto);
     });
   });
 
   describe('refreshToken', () => {
-    it('should throw NotImplementedException', () => {
-      expect(() => controller.refreshToken()).toThrow(NotImplementedException);
+    it('should call the service with the right params', async () => {
+      const token = 'token';
+
+      authenticationService.refreshToken.mockResolvedValueOnce({
+        accessToken: '',
+        refreshToken: '',
+      });
+      await controller.refreshToken({ refreshToken: token });
+
+      expect(authenticationService.refreshToken).toHaveBeenCalledWith(token);
     });
   });
 });
