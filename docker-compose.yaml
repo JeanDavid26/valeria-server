@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:18.3-alpine
+    container_name: boardgame-db
+    restart: unless-stopped
+    ports:
+      - '5434:5432'
+    environment:
+      POSTGRES_USER: ${DB_USER:-boardgame}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-boardgame}
+      POSTGRES_DB: ${DB_NAME:-boardgame}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
