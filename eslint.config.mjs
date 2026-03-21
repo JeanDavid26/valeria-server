@@ -2,6 +2,7 @@
 // @ts-check
 import eslint from '@eslint/js';
 import eslintConfigPrettier from 'eslint-config-prettier';
+import unusedImports from 'eslint-plugin-unused-imports';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
@@ -13,6 +14,9 @@ export default tseslint.config(
   ...tseslint.configs.recommendedTypeChecked,
   eslintConfigPrettier,
   {
+    plugins: {
+      'unused-imports': unusedImports,
+    },
     languageOptions: {
       globals: {
         ...globals.node,

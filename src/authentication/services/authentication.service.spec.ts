@@ -1,16 +1,18 @@
+import { UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+
+import { createMock } from '@golevelup/ts-jest';
+import * as bcrypt from 'bcrypt';
+
+import type { User } from '../models/user.model';
+import { UserRepository } from '../repository/user.repository';
+import { AuthenticationService } from './authentication.service';
+
 jest.mock('bcrypt', () => ({
   hash: jest.fn(),
   compare: jest.fn(),
 }));
-
-import { AuthenticationService } from './authentication.service';
-import { createMock } from '@golevelup/ts-jest';
-import { UserRepository } from '../repository/user.repository';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
-import { UnauthorizedException } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
-import type { User } from '../models/user.model';
 
 const userRepository = createMock<UserRepository>();
 const jwtService = createMock<JwtService>();

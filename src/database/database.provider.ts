@@ -1,7 +1,8 @@
 // src/database/database.provider.ts
+import { ConfigService } from '@nestjs/config';
+
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import { ConfigService } from '@nestjs/config';
 
 export const DATABASE = Symbol('DATABASE');
 
