@@ -1,14 +1,16 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+
+import * as bcrypt from 'bcrypt';
+
+import { AuthTokens } from '../models/auth-tokens.model';
+import { JwtPayload } from '../models/jwt-payload.model';
+import type { RegisterParam } from '../models/register.param';
+import { SignInParam } from '../models/sign-in.param';
+import { User } from '../models/user.model';
 import { USER_REPOSITORY } from '../repository/user.repository';
 import type { UserRepository } from '../repository/user.repository';
-import type { RegisterParam } from '../models/register.param';
-import { User } from '../models/user.model';
-import * as bcrypt from 'bcrypt';
-import { SignInParam } from '../models/sign-in.param';
-import { AuthTokens } from '../models/auth-tokens.model';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
-import { JwtPayload } from '../models/jwt-payload.model';
 
 @Injectable()
 export class AuthenticationService {

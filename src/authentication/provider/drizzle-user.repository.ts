@@ -1,6 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
+
 import { eq } from 'drizzle-orm';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
+
 import { DATABASE } from '../../database/database.provider';
 import { User } from '../models/user.model';
 import { UserRepository } from '../repository/user.repository';

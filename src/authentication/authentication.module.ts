@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { USER_REPOSITORY } from './repository/user.repository';
-import { DrizzleUserRepository } from './provider/drizzle-user.repository';
-import { AuthenticationController } from './controller/authentication.controller';
-import { AuthenticationService } from './services/authentication.service';
-import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
+
+import { AuthenticationController } from './controller/authentication.controller';
+import { DrizzleUserRepository } from './provider/drizzle-user.repository';
+import { USER_REPOSITORY } from './repository/user.repository';
+import { AuthenticationService } from './services/authentication.service';
 
 @Module({
   imports: [

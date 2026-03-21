@@ -1,13 +1,10 @@
-import {
-  Body,
-  Controller,
-  Post,
-} from '@nestjs/common';
-import { AuthenticationService } from '../services/authentication.service';
-import { RegisterDto } from './dtos/register.dto';
+import { Body, Controller, Post } from '@nestjs/common';
+
 import { AuthTokens } from '../models/auth-tokens.model';
-import { SignInDto } from './dtos/sign-in.dto';
+import { AuthenticationService } from '../services/authentication.service';
 import { RefreshTokenDto } from './dtos/refresh-token.dto';
+import { RegisterDto } from './dtos/register.dto';
+import { SignInDto } from './dtos/sign-in.dto';
 
 @Controller('authentication')
 export class AuthenticationController {
