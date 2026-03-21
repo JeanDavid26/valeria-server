@@ -1,6 +1,7 @@
-import { AuthenticationController } from './authentication.controller';
 import { createMock } from '@golevelup/ts-jest';
+
 import { AuthenticationService } from '../services/authentication.service';
+import { AuthenticationController } from './authentication.controller';
 import { RegisterDto } from './dtos/register.dto';
 
 const authenticationService = createMock<AuthenticationService>();
