@@ -9,8 +9,8 @@ import { JwtPayload } from '../models/jwt-payload.model';
 import type { RegisterParam } from '../models/register.param';
 import { SignInParam } from '../models/sign-in.param';
 import { User } from '../models/user.model';
-import { USER_REPOSITORY } from '../repository/user.repository';
-import type { UserRepository } from '../repository/user.repository';
+import { USER_REPOSITORY } from '../repositories/user.repository';
+import type { UserRepository } from '../repositories/user.repository';
 
 @Injectable()
 export class AuthenticationService {
@@ -20,15 +20,10 @@ export class AuthenticationService {
     private readonly configService: ConfigService,
   ) {}
 
-  async register({
-    email,
-    username,
-    password,
-  }: RegisterParam): Promise<AuthTokens> {
+  async register({ email, password }: RegisterParam): Promise<AuthTokens> {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user: Partial<User> = {
       email,
-      username,
       password: hashedPassword,
     };
     const userInserted = await this.userRepository.upsert(user);

@@ -1,5 +1,6 @@
 import { createMock } from '@golevelup/ts-jest';
 
+import { mockAuthTokens } from '../__mocks/auth-tokens.mock';
 import { AuthenticationService } from '../services/authentication.service';
 import { AuthenticationController } from './authentication.controller';
 import { RegisterDto } from './dtos/register.dto';
@@ -23,10 +24,7 @@ describe('ControllerController', () => {
         password: 'password',
       };
 
-      authenticationService.signIn.mockResolvedValueOnce({
-        accessToken: '',
-        refreshToken: '',
-      });
+      authenticationService.signIn.mockResolvedValueOnce(mockAuthTokens);
 
       await controller.signIn(signInDto);
 
@@ -39,13 +37,9 @@ describe('ControllerController', () => {
       const registerDto: RegisterDto = {
         email: 'test@test.com',
         password: 'password',
-        username: 'username',
       };
 
-      authenticationService.register.mockResolvedValueOnce({
-        accessToken: '',
-        refreshToken: '',
-      });
+      authenticationService.register.mockResolvedValueOnce(mockAuthTokens);
 
       await controller.register(registerDto);
 
@@ -57,10 +51,7 @@ describe('ControllerController', () => {
     it('should call the service with the right params', async () => {
       const token = 'token';
 
-      authenticationService.refreshToken.mockResolvedValueOnce({
-        accessToken: '',
-        refreshToken: '',
-      });
+      authenticationService.refreshToken.mockResolvedValueOnce(mockAuthTokens);
       await controller.refreshToken({ refreshToken: token });
 
       expect(authenticationService.refreshToken).toHaveBeenCalledWith(token);

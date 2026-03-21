@@ -3,9 +3,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 
 import { AuthenticationController } from './controller/authentication.controller';
-import { DrizzleUserRepository } from './provider/drizzle-user.repository';
-import { USER_REPOSITORY } from './repository/user.repository';
+import { DrizzleUserRepository } from './providers/drizzle-user.repository';
+import { USER_REPOSITORY } from './repositories/user.repository';
 import { AuthenticationService } from './services/authentication.service';
+import { UserService } from './services/user.service';
 
 @Module({
   imports: [
@@ -25,7 +26,8 @@ import { AuthenticationService } from './services/authentication.service';
       useClass: DrizzleUserRepository,
     },
     AuthenticationService,
+    UserService,
   ],
-  exports: [USER_REPOSITORY],
+  exports: [UserService],
 })
 export class AuthenticationModule {}
