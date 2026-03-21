@@ -58,16 +58,18 @@ export class AuthenticationService {
 
   private generateTokens(user: User): AuthTokens {
     const payload = { sub: user.id, email: user.email };
+    const accessExpiration = Number(
+      this.configService.getOrThrow('JWT_ACCESS_EXPIRATION'),
+    );
+    const refreshExpiration = Number(
+      this.configService.getOrThrow('JWT_REFRESH_EXPIRATION'),
+    );
     return {
       accessToken: this.jwtService.sign(payload, {
-        expiresIn: this.configService.getOrThrow<number>(
-          'JWT_ACCESS_EXPIRATION',
-        ),
+        expiresIn: accessExpiration,
       }),
       refreshToken: this.jwtService.sign(payload, {
-        expiresIn: this.configService.getOrThrow<number>(
-          'JWT_REFRESH_EXPIRATION',
-        ),
+        expiresIn: refreshExpiration,
       }),
     };
   }
