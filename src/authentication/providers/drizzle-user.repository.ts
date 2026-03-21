@@ -5,7 +5,7 @@ import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 
 import { DATABASE } from '../../database/database.provider';
 import { User } from '../models/user.model';
-import { UserRepository } from '../repository/user.repository';
+import { UserRepository } from '../repositories/user.repository';
 import { users } from './user.schema';
 
 @Injectable()

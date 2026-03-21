@@ -5,8 +5,10 @@ import { JwtService } from '@nestjs/jwt';
 import { createMock } from '@golevelup/ts-jest';
 import * as bcrypt from 'bcrypt';
 
-import type { User } from '../models/user.model';
-import { UserRepository } from '../repository/user.repository';
+import { mockAuthTokens } from '../__mocks/auth-tokens.mock';
+import { mockJwtPayload } from '../__mocks/jwt-payload.mock';
+import { mockUser } from '../__mocks/user.mock';
+import { UserRepository } from '../repositories/user.repository';
 import { AuthenticationService } from './authentication.service';
 
 jest.mock('bcrypt', () => ({
@@ -14,19 +16,12 @@ jest.mock('bcrypt', () => ({
   compare: jest.fn(),
 }));
 
-const userRepository = createMock<UserRepository>();
-const jwtService = createMock<JwtService>();
-const configService = createMock<ConfigService>();
-
-const mockUser: User = {
-  id: 'user-id',
-  email: 'test@test.com',
-  username: 'testuser',
-  password: 'hashed-password',
-};
-
 describe('AuthenticationService', () => {
   let service: AuthenticationService;
+
+  const userRepository = createMock<UserRepository>();
+  const jwtService = createMock<JwtService>();
+  const configService = createMock<ConfigService>();
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -36,7 +31,7 @@ describe('AuthenticationService', () => {
       configService,
     );
 
-    jwtService.sign.mockReturnValue('mock-token');
+    jwtService.sign.mockReturnValue(mockAuthTokens.accessToken);
     configService.getOrThrow.mockReturnValue(900);
   });
 
@@ -48,7 +43,6 @@ describe('AuthenticationService', () => {
     it('should hash password and upsert user', async () => {
       const param = {
         email: 'test@test.com',
-        username: 'testuser',
         password: 'plain-password',
       };
 
@@ -63,33 +57,26 @@ describe('AuthenticationService', () => {
       expect(bcrypt.hash).toHaveBeenCalledWith('plain-password', 10);
       expect(userRepository.upsert).toHaveBeenCalledWith({
         email: 'test@test.com',
-        username: 'testuser',
         password: 'hashed-password',
       });
-      expect(result).toEqual({
-        accessToken: 'mock-token',
-        refreshToken: 'mock-token',
-      });
+      expect(result).toStrictEqual(mockAuthTokens);
     });
   });
 
   describe('signIn', () => {
     it('should return tokens when credentials are valid', async () => {
-      const param = { email: 'test@test.com', password: 'plain-password' };
+      const param = { email: mockUser.email, password: 'plain-password' };
       userRepository.findByEmail.mockResolvedValueOnce(mockUser);
       (jest.spyOn(bcrypt, 'compare') as jest.Mock).mockResolvedValue(true);
 
       const result = await service.signIn(param);
 
-      expect(userRepository.findByEmail).toHaveBeenCalledWith('test@test.com');
+      expect(userRepository.findByEmail).toHaveBeenCalledWith(mockUser.email);
       expect(bcrypt.compare).toHaveBeenCalledWith(
         'plain-password',
         'hashed-password',
       );
-      expect(result).toEqual({
-        accessToken: 'mock-token',
-        refreshToken: 'mock-token',
-      });
+      expect(result).toStrictEqual(mockAuthTokens);
     });
 
     it('should throw UnauthorizedException when password is invalid', async () => {
@@ -105,20 +92,16 @@ describe('AuthenticationService', () => {
 
   describe('refreshToken', () => {
     it('should return new tokens when refresh token is valid', async () => {
-      jwtService.verify.mockReturnValueOnce({
-        sub: 'user-id',
-        email: 'test@test.com',
-      });
+      jwtService.verify.mockReturnValueOnce(mockJwtPayload);
       userRepository.findById.mockResolvedValueOnce(mockUser);
 
-      const result = await service.refreshToken('valid-token');
+      const result = await service.refreshToken(mockAuthTokens.refreshToken);
 
-      expect(jwtService.verify).toHaveBeenCalledWith('valid-token');
-      expect(userRepository.findById).toHaveBeenCalledWith('user-id');
-      expect(result).toEqual({
-        accessToken: 'mock-token',
-        refreshToken: 'mock-token',
-      });
+      expect(jwtService.verify).toHaveBeenCalledWith(
+        mockAuthTokens.refreshToken,
+      );
+      expect(userRepository.findById).toHaveBeenCalledWith(mockJwtPayload.sub);
+      expect(result).toStrictEqual(mockAuthTokens);
     });
 
     it('should throw UnauthorizedException when refresh token is invalid', async () => {
