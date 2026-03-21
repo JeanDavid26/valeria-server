@@ -39,4 +39,10 @@ export default tseslint.config(
       'unused-imports/no-unused-vars': 'warn',
     },
   },
+  {
+    files: ['**/*.spec.ts'],
+    rules: {
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+    },
+  },
 );
